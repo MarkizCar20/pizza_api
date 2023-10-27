@@ -1,6 +1,8 @@
 from flask import Flask, request, jsonify
 from models import MenuItem, Order, User
 
+ADMIN_TOKEN = "1234567812345678"
+
 app = Flask(__name__)
 
 menu = [
@@ -10,6 +12,35 @@ menu = [
 ]
 
 orders = []
+
+@app.route("/admin/menu", methods=["POST"])
+def add_menu_item():
+    token = request.headers.get("Authorization")
+
+    if token != ADMIN_TOKEN:
+        return jsonify({"message": "Not Authorized"}), 401
+    
+    data = request.get_json()
+    item_name = data["name"]
+    item_price = data["price"]
+    new_item = MenuItem(item_name, item_price)
+    menu.append(new_item)
+
+    return jsonify({"message": "Added new menu item"}), 200
+
+@app.route("/admin/menu/<item_name>", methods=["DELETE"])
+def delete_item(item_name):
+    token = request.headers.get("Authorization")
+
+    if token != ADMIN_TOKEN:
+        return jsonify({"message": "Not Authorized"}), 401
+    
+    item_to_delete = next((item for item in menu if item.name == item_name), None)
+
+    if item_to_delete:
+        menu.remove(item_to_delete)
+        return jsonify({"message": f"Menu item {item_name} removed from menu"}), 200
+    return jsonify({"message": f"Menu item {item_name} not found!"}), 404
 
 @app.route("/menu", methods=["GET"])
 def get_menu():
@@ -24,7 +55,7 @@ def create_order():
     user_email = data["email"]
     selected_items = data["items"]
 
-    user = User(username, user_address, user_email)
+    user = User(username, user_email, user_address)
     items = [item for item in menu if item.name in selected_items]
     new_order = Order(user, items)
     orders.append(new_order)

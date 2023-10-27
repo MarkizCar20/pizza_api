@@ -11,8 +11,9 @@ class Order:
         self.status = "Pending"
 
 class User:
-    def __init__(self, username, email, address):
+    def __init__(self, username, email, address, is_admin=False):
         self.username = username
         self.email = email
         self.address = address
+        self.is_admin = is_admin
 
