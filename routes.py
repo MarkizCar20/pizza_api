@@ -57,12 +57,12 @@ def delete_item(item_name):
 def cancel_order_admin(order_id):
     if 0 <= order_id < len(orders):
         orders.pop(order_id)
-        return jsonify({"message":"Order canceled"})
+        return jsonify({"message":"Order canceled"}), 201
 
 @app.route("/menu", methods=["GET"])
 def get_menu():
     menu_data = [{"name":item.name, "price":item.price} for item in menu]
-    return jsonify(menu_data)
+    return jsonify(menu_data), 200
 
 @app.route("/orders", methods=["POST"])
 def create_order():
@@ -80,7 +80,7 @@ def create_order():
     items = [item for item in menu if item.name in selected_items]
     for user_to_find in users:
         if user_to_find.username == username and user_to_find.email == user_email:
-            user_address = user_to_find["address"]
+            user_address = user_to_find.address
     user = User(username, user_email, user_address)
     new_order = Order(user, items)
     orders.append(new_order)
@@ -98,7 +98,7 @@ def cancel_order(order_id):
     if 0 <= order_id < len(orders):
         if orders[order_id].status != "Ready to be delivered":
             orders.pop(order_id)
-            return jsonify({"message": "Order canceled!"})
+            return jsonify({"message": "Order canceled!"}), 201
         return jsonify({"message": "Cannot cancel ready order!"}), 400
     return jsonify({"message": "Order not found"}), 404
 
