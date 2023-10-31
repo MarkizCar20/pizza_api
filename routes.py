@@ -78,6 +78,8 @@ def create_order():
     ) == False):
         return jsonify({"message":f"User {username} isn't registered. Register or provide user address"}), 404       
     items = [item for item in menu if item.name in selected_items]
+    if (items == None):
+        return jsonify({"message": "Pizza doesn't exist in menu"}), 404
     for user_to_find in users:
         if user_to_find.username == username and user_to_find.email == user_email:
             user_address = user_to_find.address

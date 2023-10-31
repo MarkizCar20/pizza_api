@@ -99,10 +99,13 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Pizza API CLI")
 
     parser.add_argument("--list-menu", action="store_true", help="List the menu")
-    parser.add_argument("--create-order", metavar=("username", "email", "address", "items"), nargs="+", help="Create pizza order")
+    parser.add_argument("create_order", help="Create pizza order")
+    parser.add_argument("--pizzas", metavar=["pizzas"], nargs="+", help="Which pizzas are added to the order")
+    parser.add_argument("--username", metavar="username", nargs=1, help="Username for order create")
+    parser.add_argument("--email", metavar="email", nargs=1, help="Email for order create")
+    parser.add_argument("--address", metavar="address", nargs=1, help="Address for order create")
     parser.add_argument("--check-order-status", metavar=("order-id"), nargs=1, help="Check order status")
     parser.add_argument("--cancel-order", metavar=("order-id"), nargs=1 , help="Cancel pizza order")
-    parser.add_argument("--create-order", metavar=("username", "email", "address", "items"), nargs="+", help="Create pizza order")
     parser.add_argument("--add-pizza", metavar=("name", "price"), nargs=2, help="Add pizza to the menu *Admin only option*")
     parser.add_argument("--delete-pizza", metavar=("name"), nargs=1, help="Delete pizza from the menu *Admin only option*")
     parser.add_argument("--admin-cancel-order", metavar=("id"), nargs=1, help="Cancel any order *Admin only option*")
@@ -112,7 +115,10 @@ if __name__ == "__main__":
     if args.list_menu:
         list_menu()
     elif args.create_order:
-        create_order(args.create_order[0], args.create_order[1:])
+        if args.pizzas == None:
+            print("Need to add pizzas to the order!")
+            exit(1)
+        create_order(args.username, args.email, args.address, args.pizzas)
     elif args.check_order_status:
         check_order_status(args.check_order_status)
     elif args.cancel_order:
@@ -124,3 +130,33 @@ if __name__ == "__main__":
     else:
         parser.print_help()
 
+    while(1):
+        print(f"API listening for next request - User --help for list of requests: ")
+        command = input()
+        if (command == "list_menu"):
+            list_menu()
+        elif (command == "create_order"):
+            username = input("Username: ")
+            email = input("email: ")
+            address = input("address: ")
+            pizzas = input("Pizzas: ")
+            create_order(username, email, address, pizzas)
+        elif (command == "check_order_status"):
+            order_id = input("Order id: ")
+            check_order_status(order_id)
+        elif (command == "cancel_order"):
+            order_id = input("Order id: ")
+            cancel_order(order_id)
+        elif (command == "add_pizza"):
+            name = input("Pizza name: ")
+            price = str(input("Pizza price: "))
+            admin_add_pizza(name, price)
+        elif (command == "delete-pizza"):
+            name = input("Pizza name")
+            admin_delete_pizza(name)
+        elif (command == "admin_cancel_order"):
+            order_id = input("Order id: ")
+        elif (command == "quit"):
+            exit(0)
+        elif (command == "--help"):
+            parser.print_help()
