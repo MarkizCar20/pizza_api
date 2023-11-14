@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from models import MenuItem, Order, User
+import random
 
 ADMIN_TOKEN = "1234567812345678"
 
@@ -8,7 +9,6 @@ app = Flask(__name__)
 menu = [
     MenuItem("Margherita", 10.99),
     MenuItem("Pepperoni", 15.00),
-    #Add more items - Or add a method to add more items I guesss?
 ]
 
 users = []
@@ -97,6 +97,7 @@ def check_order_status(order_id):
 
 @app.route("/order/<int:order_id>", methods=["DELETE"])
 def cancel_order(order_id):
+
     if 0 <= order_id < len(orders):
         if orders[order_id].status != "Ready to be delivered":
             orders.pop(order_id)

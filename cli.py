@@ -99,7 +99,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Pizza API CLI")
 
     parser.add_argument("--list-menu", action="store_true", help="List the menu")
-    parser.add_argument("create_order", help="Create pizza order")
+    parser.add_argument("--create_order", help="Create pizza order")
     parser.add_argument("--pizzas", metavar=["pizzas"], nargs="+", help="Which pizzas are added to the order")
     parser.add_argument("--username", metavar="username", nargs=1, help="Username for order create")
     parser.add_argument("--email", metavar="email", nargs=1, help="Email for order create")
