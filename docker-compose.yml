@@ -1,0 +1,18 @@
+version: '3.9'
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    ports:
+      - "5000:5000"
+  
+  cli:
+    build:
+      context: .
+      dockerfile: Dockerfile.cli
+    
+    stdin_open: true
+    tty: true
+    depends_on:
+      - api
