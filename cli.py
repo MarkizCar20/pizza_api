@@ -5,7 +5,7 @@ import requests
 
 #CLI for the Pizza API
 
-BASE_URL = "http://127.0.0.1:5000"
+BASE_URL = "http://172.18.0.2:5000"
 
 headers = {
     "Content-type":"application/json",
